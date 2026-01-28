@@ -7,6 +7,9 @@ use App\Http\Controllers\Member\PanduanController;
 use App\Http\Controllers\Member\DashboardController;
 use App\Http\Controllers\Member\TransaksiController;
 use App\Http\Controllers\Member\AkunKeuanganController;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\Admin\KategoriMasterController as AdminKategoriMasterController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -26,10 +29,24 @@ Route::middleware(['auth', 'verified', 'role:member'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/admin/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('admin.dashboard');
-});
+Route::middleware(['auth', 'role:admin'])->prefix('admin')
+    ->name('admin.')->group(function () {
+        Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
+
+        Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
+        Route::get('/users/{user}/edit', [AdminUserController::class, 'edit'])->name('users.edit');
+        Route::put('/users/{user}', [AdminUserController::class, 'update'])->name('users.update');
+
+        Route::patch('/users/{user}/toggle-status', [AdminUserController::class, 'toggleStatus'])
+            ->name('users.toggle-status');
+
+        Route::post('/users/{user}/reset-password', [AdminUserController::class, 'resetPassword'])
+            ->name('users.reset-password');
+
+        Route::delete('/users/{user}', [AdminUserController::class, 'destroy'])
+            ->name('users.destroy');
+
+        Route::resource('kategori-master', AdminKategoriMasterController::class);
+    });
 
 require __DIR__ . '/auth.php';
