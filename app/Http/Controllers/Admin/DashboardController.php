@@ -11,6 +11,15 @@ class DashboardController extends Controller
 {
     public function index()
     {
+        $setting = DB::table('system_settings')->first();
+
+        // fallback kalau tabel kosong
+        if (! $setting) {
+            $setting = (object) [
+                'maintenance_mode' => false
+            ];
+        }
+
         // Total member
         $totalUser = User::where('role', 'member')->count();
 
@@ -41,6 +50,7 @@ class DashboardController extends Controller
             ->get();
 
         return view('admin.dashboard', compact(
+            'setting',
             'totalUser',
             'statGlobal',
             'netFlow',

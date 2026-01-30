@@ -21,7 +21,7 @@ return new class extends Migration
             $table->text('keterangan')->nullable();
             $table->timestamps();
 
-            $table->index('user_id', 'tanggal');
+            $table->index(['user_id', 'tanggal']);
         });
     }
 

@@ -90,13 +90,13 @@ class KategoriMasterController extends Controller
     /**
      * Hapus kategori master
      */
-    public function destroy(KategoriKeuangan $kategori)
+    public function destroy(KategoriKeuangan $kategori_master)
     {
-        if ($kategori->user_id !== null) {
+        if ($kategori_master->user_id !== null) {
             abort(403);
         }
 
-        $kategori->delete();
+        $kategori_master->delete();
 
         return back()->with('success', 'Kategori master berhasil dihapus');
     }

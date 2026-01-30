@@ -10,6 +10,7 @@ use App\Http\Controllers\Member\AkunKeuanganController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\KategoriMasterController as AdminKategoriMasterController;
+use App\Http\Controllers\Admin\AuditTransaksiController as AdminAuditTransaksiController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -47,6 +48,14 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')
             ->name('users.destroy');
 
         Route::resource('kategori-master', AdminKategoriMasterController::class);
+
+        Route::get('/audit/transaksi', [AdminAuditTransaksiController::class, 'index'])
+            ->name('audit.transaksi.index');
+
+        Route::post(
+            '/maintenance-toggle',
+            [\App\Http\Controllers\Admin\MaintenanceController::class, 'toggle']
+        )->name('maintenance.toggle');
     });
 
 require __DIR__ . '/auth.php';
